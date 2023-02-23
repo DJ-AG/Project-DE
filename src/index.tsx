@@ -1,33 +1,32 @@
 import * as esbuild from "esbuild-wasm";
 import { useState, useEffect, useRef } from "react";
-import { createRoot } from "react-dom/client";
+import ReactDOM from "react-dom";
 import { unpkgPathPlugin } from "./plugin/unpkg-path-plugin";
 import { fetchPlugin } from "./plugin/fetch-plugin";
 
-const HTMLElement = document.querySelector("#root") as HTMLDivElement;
-
-const root = createRoot(HTMLElement);
-
 const App = () => {
   const ref = useRef<any>();
+  const iframe = useRef<any>();
   const [input, setInput] = useState("");
   const [code, setCode] = useState("");
 
-  const startingService = async () => {
+  const startService = async () => {
     ref.current = await esbuild.startService({
       worker: true,
-      wasmURL: 'https://unpkg.com/esbuild-wasm@0.8.27/esbuild.wasm',
+      wasmURL: "https://unpkg.com/esbuild-wasm@0.8.27/esbuild.wasm",
     });
   };
-
   useEffect(() => {
-    startingService();
+    startService();
   }, []);
 
-  const onCLick = async () => {
-    if (!ref.current) return;
+  const onClick = async () => {
+    if (!ref.current) {
+      return;
+    }
 
-    //bundle process | build bundle
+    iframe.current.srcdoc = html;
+
     const result = await ref.current.build({
       entryPoints: ["index.js"],
       bundle: true,
@@ -38,8 +37,30 @@ const App = () => {
         global: "window",
       },
     });
-    setCode(result.outputFiles[0].text);
+
+    // setCode(result.outputFiles[0].text);
+    iframe.current.contentWindow.postMessage(result.outputFiles[0].text, "*");
   };
+
+  const html = `
+    <html>
+      <head></head>
+      <body>
+        <div id="root"></div>
+        <script>
+          window.addEventListener('message', (event) => {
+            try {
+              eval(event.data);
+            } catch (err) {
+              const root = document.querySelector('#root');
+              root.innerHTML = '<div style="color: red;"><h4>Runtime Error</h4>' + err + '</div>';
+              console.error(err);
+            }
+          }, false);
+        </script>
+      </body>
+    </html>
+  `;
 
   return (
     <div>
@@ -48,11 +69,12 @@ const App = () => {
         onChange={(e) => setInput(e.target.value)}
       ></textarea>
       <div>
-        <button onClick={onCLick}>Submit</button>
+        <button onClick={onClick}>Submit</button>
       </div>
       <pre>{code}</pre>
+      <iframe ref={iframe} sandbox="allow-scripts" srcDoc={html} />
     </div>
   );
 };
 
-root.render(<App />);
+ReactDOM.render(<App />, document.querySelector("#root"));
