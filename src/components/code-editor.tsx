@@ -4,9 +4,6 @@ import { useRef } from 'react';
 import MonacoEditor, { OnMount } from '@monaco-editor/react';
 import prettier from 'prettier';
 import parser from 'prettier/parser-babel';
-import MonacoJSXHighlighter from 'monaco-jsx-highlighter';
-import {parse} from '@babel/parser'
-import traverse from '@babel/traverse'
  
  
  
@@ -24,17 +21,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
     });
  
     editor.getModel()?.updateOptions({ tabSize: 2 });
-    const highlighter = new MonacoJSXHighlighter(
-      // @ts-ignore
-      window.monaco,parse,traverse,editor)
- 
- 
-      highlighter.highLightOnDidChangeModelContent(
-        ()=>{},
-        ()=>{},
-        undefined,
-        ()=>{}
-      );
+
   };
  
   const onFormatClick = () => {
