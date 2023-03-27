@@ -30,17 +30,7 @@ const reducer = (
     case ActionType.MOVE_CELL:
       return state;
     case ActionType.UPDATE_CELL:
-      const { id, content } = action.payload;
-      return {
-        ...state,
-        data: {
-          ...state.data,
-          [id]: {
-            ...state.data[id],
-            content,
-          },
-        },
-      };
+      return state;
     default:
       return state;
   }

@@ -1,6 +1,7 @@
 import "bulmaswatch/superhero/bulmaswatch.min.css";
 import { createRoot } from "react-dom/client";
-import CodeCell from "./components/code-cell";
+import { Provider } from "react-redux";
+import { store } from "./Redux";
 import TextEditor from "./components/text-editor";
 
 const HTMLElement = document.querySelector("#root") as HTMLDivElement;
@@ -9,9 +10,11 @@ const root = createRoot(HTMLElement);
 
 const App = () => {
   return (
-    <div>
-      <TextEditor />
-    </div>
+    <Provider store={store}>
+      <div>
+        <TextEditor />
+      </div>
+    </Provider>
   );
 };
 
