@@ -4,7 +4,6 @@ import { combineReducers } from "redux";
 
 const reducers = combineReducers({
   cells: cellsReducer,
-  bundle: bundleReducer,
 });
 
 export default reducers;
