@@ -14,7 +14,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
   const onEditorDidMount: OnMount = (editor) => {
     editorRef.current = editor;
     editor.onDidChangeModelContent(() => {
-      console.log(editor.getValue());
       onChange(editor.getValue());
     });
 
@@ -22,7 +21,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
   };
 
   const onFormatClick = () => {
-    // console.log(editorRef.current)
     const unformatted = editorRef.current.getModel().getValue();
 
     const formatted = prettier
@@ -34,7 +32,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ initialValue, onChange }) => {
         singleQuote: true,
       })
       .replace(/\n$/, "");
-    console.log(formatted);
     editorRef.current.setValue(formatted);
   };
   return (
