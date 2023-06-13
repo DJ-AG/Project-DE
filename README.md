@@ -6,6 +6,9 @@ it's like a Jupyter Notebook, but for Javascript, with many additional features 
 
 
 Project uses CLI to launch an interactive development enviroment for writing and documenting code
+ 
+!!! ongoing !!! 
+Adding cli to save data to local computer and load it 
 
 
 Tags: `React`,`Typescript`,`Redux`, `Web Assembly`
